@@ -1,0 +1,23 @@
+# Archivos de configuración del IDE
+/.project
+/.classpath
+/.settings/
+
+# Carpetas de compilación
+/target/
+/bin/
+/build/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Dependencias locales o temporales
+*.log
+*.tmp
+
+# Configuración de Maven y cache local
+.mvn/
+.idea/
+*.iml
+*.swp
