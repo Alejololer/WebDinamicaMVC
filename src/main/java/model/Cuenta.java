@@ -10,91 +10,81 @@ public class Cuenta {
     private double balance;
     private Date ultimoMovimiento;
     private List<Movimiento> movimientos;
+    private Usuario usuario;
     
+    // Constructor completo
+    public Cuenta(String nombre, String descripcion, double balance) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.balance = balance;
+    }
+    
+    // Constructor básico
+    public Cuenta(String nombre, String descripcion) {
+        this(nombre, descripcion, 0.0);
+    }
+    
+    // Constructor mínimo para referencias
     public Cuenta() {
-		super();
-		this.id = id;
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.balance = balance;
-		this.ultimoMovimiento = ultimoMovimiento;
-		this.movimientos = movimientos;
-	}
+        this("", "", 0.0);
+    }
     
-	public int getId() {
-		return id;
-	}
+    // Getters y Setters básicos
+    public int getId() { return id; }
 
+    public void setId(int id) { this.id = id; }
 
+    public String getNombre() { return nombre; }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
+    public double getBalance() { return balance; }
 
+    public void setBalance(double balance) { this.balance = balance; }
 
-	public String getNombre() {
-		return nombre;
-	}
+    public Date getUltimoMovimiento() { return ultimoMovimiento; }
 
+    public void setUltimoMovimiento(Date ultimoMovimiento) { this.ultimoMovimiento = ultimoMovimiento; }
 
+    public List<Movimiento> getMovimientos() { return movimientos; }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-
-
-	public double getBalance() {
-		return balance;
-	}
-
-
-
-	public void setBalance(double balance) {
-		this.balance = balance;
-	}
-
-
-
-	public Date getUltimoMovimiento() {
-		return ultimoMovimiento;
-	}
-
-
-
-	public void setUltimoMovimiento(Date ultimoMovimiento) {
-		this.ultimoMovimiento = ultimoMovimiento;
-	}
-
-
-
-	public List<Movimiento> getMovimientos() {
-		return movimientos;
-	}
-
-
-
-	public void setMovimientos(List<Movimiento> movimientos) {
-		this.movimientos = movimientos;
-	}
+    public void setMovimientos(List<Movimiento> movimientos) { this.movimientos = movimientos; }
 	
-	public double calcularBalance() {
+    public Usuario getUsuario() { return usuario; }
+	
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    
+    /**
+     * Calcula el balance actual sumando todos los movimientos.
+     * Útil para verificar que el balance almacenado sea correcto.
+     */
+    public double calcularBalanceReal() {
+        if (movimientos == null || movimientos.isEmpty()) {
+            return 0.0;
+        }
         return movimientos.stream()
-                .mapToDouble(m -> m.getTipo() == TipoMovimiento.INGRESO ? 
-                           m.getValor() : -m.getValor())
+                .mapToDouble(m -> {
+                    switch (m.getTipo()) {
+                        case INGRESO:
+                        case TRANSFERENCIA_ENTRANTE:
+                            return m.getValor();
+                        case EGRESO:
+                        case TRANSFERENCIA_SALIENTE:
+                            return -m.getValor();
+                        default:
+                            return 0.0;
+                    }
+                })
                 .sum();
+    }
+    
+    /**
+     * Verifica que el balance almacenado coincida con el calculado
+     */
+    public boolean verificarBalance() {
+        return Math.abs(this.balance - calcularBalanceReal()) < 0.01;
     }
 }

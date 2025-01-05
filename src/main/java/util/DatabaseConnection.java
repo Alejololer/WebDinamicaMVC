@@ -33,10 +33,10 @@ public class DatabaseConnection {
 
     public static Connection getConnection() throws SQLException {
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException e) {
-            throw new SQLException("SQL Server JDBC Driver not found.", e);
+            throw new SQLException("MySQL JDBC Driver not found.", e);
         }
     }
 

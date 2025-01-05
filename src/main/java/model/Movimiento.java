@@ -3,39 +3,54 @@ package model;
 import java.util.Date;
 
 public class Movimiento {
-    private int id;
-    private String nombre;
-    private Categoria categoria;
-    private Date fecha;
-    private double valor;
-    private TipoMovimiento tipo;
-    private int cuentaId;
-    private Integer cuentaDestinoId; // Solo para transferencias
-    private String descripcion;
-    
-    // Constructor para movimientos normales
-    public Movimiento(String nombre, Categoria categoria, double valor, 
-                     TipoMovimiento tipo, int cuentaId) {
-        this.nombre = nombre;
-        this.categoria = categoria;
-        this.valor = valor;
-        this.tipo = tipo;
-        this.cuentaId = cuentaId;
-        this.fecha = new Date();
-    }
-    
-    // Constructor para transferencias
-    public Movimiento(String nombre, Categoria categoria, double valor, 
-                     int cuentaOrigenId, int cuentaDestinoId, String descripcion) {
-        this.nombre = nombre;
-        this.categoria = categoria;
-        this.valor = valor;
-        this.tipo = TipoMovimiento.TRANSFERENCIA;
-        this.cuentaId = cuentaOrigenId;
-        this.cuentaDestinoId = cuentaDestinoId;
-        this.descripcion = descripcion;
-        this.fecha = new Date();
-    }
+	private int id;
+	private String nombre;
+	private Categoria categoria;
+	private Date fecha;
+	private double valor;
+	private TipoMovimiento tipo;
+	private int cuentaId;
+	private Integer cuentaDestinoId; // Solo para transferencias
+	private String descripcion;
+	private Cuenta cuentaOrigen; // Para transferencias
+	private Cuenta cuentaDestino; // Para transferencias
+	private double saldoDespues; // Para mostrar el saldo después del movimiento
+	private int cuentaRelacionadaId; // Para el enlace "Ver cuenta"
+
+	// Constructor para movimientos normales
+	public Movimiento(int id, String nombre, Categoria categoria, Date fecha, double valor, TipoMovimiento tipo,
+			int cuentaId, String descripcion, double saldoDespues) {
+		this.id = id;
+		this.nombre = nombre;
+		this.categoria = categoria;
+		this.fecha = fecha;
+		this.valor = valor;
+		this.tipo = tipo;
+		this.cuentaId = cuentaId;
+		this.cuentaDestinoId = null;
+		this.descripcion = descripcion;
+		this.cuentaOrigen = null;
+		this.cuentaDestino = null;
+		this.saldoDespues = saldoDespues;
+	}
+
+// Constructor para transferencias desde BD
+	public Movimiento(int id, String nombre, Categoria categoria, Date fecha, double valor, TipoMovimiento tipo,
+			int cuentaId, Integer cuentaDestinoId, String descripcion, Cuenta cuentaOrigen, Cuenta cuentaDestino,
+			double saldoDespues) {
+		this.id = id;
+		this.nombre = nombre;
+		this.categoria = categoria;
+		this.fecha = fecha;
+		this.valor = valor;
+		this.tipo = tipo;
+		this.cuentaId = cuentaId;
+		this.cuentaDestinoId = cuentaDestinoId;
+		this.descripcion = descripcion;
+		this.cuentaOrigen = cuentaOrigen;
+		this.cuentaDestino = cuentaDestino;
+		this.saldoDespues = saldoDespues;
+	}
 
 	public int getId() {
 		return id;
@@ -108,6 +123,37 @@ public class Movimiento {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-    
-    
+
+	public Cuenta getCuentaOrigen() {
+		return cuentaOrigen;
+	}
+
+	public void setCuentaOrigen(Cuenta cuentaOrigen) {
+		this.cuentaOrigen = cuentaOrigen;
+	}
+
+	public Cuenta getCuentaDestino() {
+		return cuentaDestino;
+	}
+
+	public void setCuentaDestino(Cuenta cuentaDestino) {
+		this.cuentaDestino = cuentaDestino;
+	}
+
+	public double getSaldoDespues() {
+		return saldoDespues;
+	}
+
+	public void setSaldoDespues(double saldoDespues) {
+		this.saldoDespues = saldoDespues;
+	}
+
+	public int getCuentaRelacionadaId() {
+        return tipo == TipoMovimiento.TRANSFERENCIA_SALIENTE ? cuentaDestinoId :
+               tipo == TipoMovimiento.TRANSFERENCIA_ENTRANTE ? cuentaId : 0;
+    }
+	
+	public void setCuentaRelacionadaId(int cuentaRelacionadaId) {
+		this.cuentaRelacionadaId = cuentaRelacionadaId;
+	}
 }

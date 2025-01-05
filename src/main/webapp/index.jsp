@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link rel="icon" type="image/png" href="images/dollar.png">
     <script src="https://kit.fontawesome.com/d2aae01839.js"></script>
 </head>
+
 <body>
     <header class="header bg-primary ds-flex jc-sb pd-y-16 pd-x-24 font-secondary text-white align-center">
         <div class="text-xl font-bold">
@@ -45,8 +47,12 @@
             <section class="account-details">
                 <div class="ds-flex gap-16 font-primary text-dark">
                     <div>
-                        <p class="text-lg font-bold"><c:out value="${account.nombre}" /></p>
-                        <p class="text-base"><c:out value="${account.descripcion}" /></p>
+                        <p class="text-lg font-bold">
+                            <c:out value="${account.nombre}" />
+                        </p>
+                        <p class="text-base">
+                            <c:out value="${account.descripcion}" />
+                        </p>
                     </div>
                     <div class="ds-flex gap-24">
                         <div>
@@ -65,18 +71,19 @@
                 </div>
             </section>
 
-            <section class="movements-filter mt-lg">
+            <section class="movimientos-filter mt-lg">
                 <h3 class="font-primary text-dark pb-md">Filtrar Movimientos</h3>
                 <form id="filter-form" action="verCuenta" method="GET" class="ds-flex gap-16 flex-wrap">
                     <input type="hidden" name="id" value="${account.id}">
-                    
+
                     <div class="form-group">
                         <label for="tipo" class="font-primary text-dark">Tipo</label>
                         <select id="tipo" name="tipo" class="input">
                             <option value="">Todos</option>
-                            <option value="INGRESO" ${param.tipo == 'INGRESO' ? 'selected' : ''}>Ingresos</option>
-                            <option value="EGRESO" ${param.tipo == 'EGRESO' ? 'selected' : ''}>Egresos</option>
-                            <option value="TRANSFERENCIA" ${param.tipo == 'TRANSFERENCIA' ? 'selected' : ''}>Transferencias</option>
+                            <option value="INGRESO" ${param.tipo=='INGRESO' ? 'selected' : '' }>Ingresos</option>
+                            <option value="EGRESO" ${param.tipo=='EGRESO' ? 'selected' : '' }>Egresos</option>
+                            <option value="TRANSFERENCIA" ${param.tipo=='TRANSFERENCIA' ? 'selected' : '' }>
+                                Transferencias</option>
                         </select>
                     </div>
 
@@ -85,7 +92,7 @@
                         <select id="categoria" name="categoria" class="input">
                             <option value="">Todas</option>
                             <c:forEach var="categoria" items="${categorias}">
-                                <option value="${categoria.id}" ${param.categoria == categoria.id ? 'selected' : ''}>
+                                <option value="${categoria.id}" ${param.categoria==categoria.id ? 'selected' : '' }>
                                     ${categoria.nombre}
                                 </option>
                             </c:forEach>
@@ -94,14 +101,13 @@
 
                     <div class="form-group">
                         <label for="fecha-inicio" class="font-primary text-dark">Desde</label>
-                        <input type="date" id="fecha-inicio" name="fechaInicio" class="input" 
-                               value="${param.fechaInicio}">
+                        <input type="date" id="fecha-inicio" name="fechaInicio" class="input"
+                            value="${param.fechaInicio}">
                     </div>
 
                     <div class="form-group">
                         <label for="fecha-fin" class="font-primary text-dark">Hasta</label>
-                        <input type="date" id="fecha-fin" name="fechaFin" class="input" 
-                               value="${param.fechaFin}">
+                        <input type="date" id="fecha-fin" name="fechaFin" class="input" value="${param.fechaFin}">
                     </div>
 
                     <div class="form-group" style="justify-content: flex-end;">
@@ -119,6 +125,7 @@
                         <thead>
                             <tr class="bg-light text-dark">
                                 <th>Fecha</th>
+                                <th>Nombre</th>
                                 <th>Descripción</th>
                                 <th>Categoría</th>
                                 <th>Tipo</th>
@@ -128,39 +135,50 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="movement" items="${movements}">
+                            <c:forEach var="movimiento" items="${movimientos}">
                                 <tr class="border-b-light">
-                                    <td><fmt:formatDate value="${movement.fecha}" pattern="dd/MM/yyyy" /></td>
-                                    <td><c:out value="${movement.nombre}" /></td>
-                                    <td><c:out value="${movement.categoria.nombre}" /></td>
+                                    <td>
+                                        <fmt:formatDate value="${movimiento.fecha}" pattern="dd/MM/yyyy" />
+                                    </td>
+                                    <td>
+                                        <c:out value="${movimiento.nombre}" />
+                                    </td>
+                                    <td>
+                                        <c:out value="${movimiento.descripcion}" />
+                                    </td>
+                                    <td>
+                                        <c:out value="${movimiento.categoria.nombre}" />
+                                    </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${movement.tipo == 'TRANSFERENCIA_SALIENTE'}">
+                                            <c:when test="${movimiento.tipo == 'TRANSFERENCIA_SALIENTE'}">
                                                 <span class="text-negative">
-                                                    <i class="fa-solid fa-arrow-right"></i> Transferencia a ${movement.cuentaDestino.nombre}
+                                                    <i class="fa-solid fa-arrow-right"></i> Transferencia a
+                                                    ${movimiento.cuentaDestino.nombre}
                                                 </span>
                                             </c:when>
-                                            <c:when test="${movement.tipo == 'TRANSFERENCIA_ENTRANTE'}">
+                                            <c:when test="${movimiento.tipo == 'TRANSFERENCIA_ENTRANTE'}">
                                                 <span class="text-positive">
-                                                    <i class="fa-solid fa-arrow-left"></i> Transferencia desde ${movement.cuentaOrigen.nombre}
+                                                    <i class="fa-solid fa-arrow-left"></i> Transferencia desde
+                                                    ${movimiento.cuentaOrigen.nombre}
                                                 </span>
                                             </c:when>
                                             <c:otherwise>
-                                                ${movement.tipo}
+                                                ${movimiento.tipo}
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td class="text-right ${movement.valor >= 0 ? 'text-positive' : 'text-negative'}">
-                                        <fmt:formatNumber value="${movement.valor}" type="currency" />
+                                    <td class="text-right ${movimiento.tipo == 'EGRESO' || movimiento.tipo == 'TRANSFERENCIA_SALIENTE' ? 'text-negative' : 'text-positive'}">
+                                        <fmt:formatNumber value="${movimiento.valor}" type="currency" />
                                     </td>
-                                    <td class="text-right">
-                                        <fmt:formatNumber value="${movement.saldoDespues}" type="currency" />
+                                    <td class="text-right ${movimiento.saldoDespues >= 0 ? 'text-positive' : 'text-negative'}">
+                                        <fmt:formatNumber value="${movimiento.saldoDespues}" type="currency" />
                                     </td>
                                     <td>
-                                        <c:if test="${movement.tipo == 'TRANSFERENCIA_SALIENTE' || 
-                                                     movement.tipo == 'TRANSFERENCIA_ENTRANTE'}">
-                                            <button class="link" 
-                                                    onclick="location.href='verCuenta?id=${movement.cuentaRelacionadaId}'">
+                                        <c:if test="${movimiento.tipo == 'TRANSFERENCIA_SALIENTE' || 
+                                                     movimiento.tipo == 'TRANSFERENCIA_ENTRANTE'}">
+                                            <button class="link"
+                                                onclick="location.href='verCuenta?id=${movimiento.cuentaRelacionadaId}'">
                                                 Ver cuenta
                                             </button>
                                         </c:if>
@@ -189,7 +207,8 @@
                     </div>
                     <div class="card flex-1">
                         <p class="text-sm text-dark">Balance del Período</p>
-                        <p class="text-xl font-bold ${totalIngresos - totalEgresos >= 0 ? 'text-positive' : 'text-negative'}">
+                        <p
+                            class="text-xl font-bold ${totalIngresos - totalEgresos >= 0 ? 'text-positive' : 'text-negative'}">
                             <fmt:formatNumber value="${totalIngresos - totalEgresos}" type="currency" />
                         </p>
                     </div>
@@ -198,4 +217,5 @@
         </div>
     </main>
 </body>
+
 </html>

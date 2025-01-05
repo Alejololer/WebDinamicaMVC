@@ -3,5 +3,6 @@ package model;
 public enum TipoMovimiento {
     INGRESO,
     EGRESO,
-    TRANSFERENCIA
+    TRANSFERENCIA_SALIENTE,
+    TRANSFERENCIA_ENTRANTE
 }
