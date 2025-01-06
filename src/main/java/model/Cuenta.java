@@ -53,24 +53,4 @@ public class Cuenta {
     
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     
-    public double calcularBalanceReal() {
-        if (movimientos == null || movimientos.isEmpty()) {
-            return 0.0;
-        }
-        return movimientos.stream()
-                .mapToDouble(m -> {
-                    switch (m.getTipo()) {
-                        case INGRESO:
-                        case TRANSFERENCIA_ENTRANTE:
-                            return m.getValor();
-                        case EGRESO:
-                        case TRANSFERENCIA_SALIENTE:
-                            return -m.getValor();
-                        default:
-                            return 0.0;
-                    }
-                })
-                .sum();
-    }
-    
 }

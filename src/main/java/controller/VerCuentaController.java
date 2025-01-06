@@ -60,6 +60,7 @@ public class VerCuentaController extends HttpServlet {
             
             // Actualizar el balance real de la cuenta
             cuenta.setBalance(saldoReal);
+            cuenta.setUltimoMovimiento(todosLosMovimientos.getLast().getFecha());
             
             // Aplicar filtros si existen
             List<Movimiento> movimientosFiltrados = todosLosMovimientos;
