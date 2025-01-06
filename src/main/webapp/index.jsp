@@ -59,21 +59,12 @@
                         <p class="text-lg font-bold">
                             <c:out value="${cuenta.nombre}" />
                         </p>
-                        <p class="text-base">
-                            <c:out value="${cuenta.descripcion}" />
-                        </p>
                     </div>
                     <div class="ds-flex gap-24">
                         <div>
                             <p class="text-sm">Balance Actual</p>
                             <p class="text-xl font-bold ${cuenta.balance >= 0 ? 'text-positive' : 'text-negative'}">
                                 <fmt:formatNumber value="${cuenta.balance}" type="currency" />
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-sm">Último Movimiento</p>
-                            <p class="text-base">
-                                <fmt:formatDate value="${cuenta.ultimoMovimiento}" pattern="dd/MM/yyyy" />
                             </p>
                         </div>
                     </div>
@@ -134,8 +125,7 @@
                         <thead>
                             <tr class="bg-light text-dark">
                                 <th>Fecha</th>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
+                                <th>Concepto</th>
                                 <th>Categoría</th>
                                 <th>Tipo</th>
                                 <th class="text-right">Valor</th>
@@ -149,10 +139,7 @@
                                         <fmt:formatDate value="${movimiento.fecha}" pattern="dd/MM/yyyy" />
                                     </td>
                                     <td>
-                                        <c:out value="${movimiento.nombre}" />
-                                    </td>
-                                    <td>
-                                        <c:out value="${movimiento.descripcion}" />
+                                        <c:out value="${movimiento.concepto}" />
                                     </td>
                                     <td>
                                         <c:out value="${movimiento.categoria.nombre}" />

@@ -1,51 +1,53 @@
 package model;
 
-import java.util.Date;
 import java.util.List;
 
 public class Cuenta {
-    private int id;
-    private String nombre;
-    private String descripcion;
-    private double balance;
-    private Date ultimoMovimiento;
-    private List<Movimiento> movimientos;
-    
-    public Cuenta(String nombre, String descripcion, double balance) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.balance = balance;
-    }
-    
-    public Cuenta(String nombre, String descripcion) {
-        this(nombre, descripcion, 0.0);
-    }
-    
-    // Getters y Setters básicos
-    public int getId() { return id; }
+	private int id;
+	private String nombre;
+	private double balance;
+	private List<Movimiento> movimientos;
 
-    public void setId(int id) { this.id = id; }
+	public Cuenta(String nombre, double balance) {
+		this.nombre = nombre;
+		this.balance = balance;
+	}
 
-    public String getNombre() { return nombre; }
+	public Cuenta(String nombre) {
+		this(nombre, 0.0);
+	}
 
-    public void setNombre(String nombre) { this.nombre = nombre; }
+	// Getters y Setters básicos
+	public int getId() {
+		return id;
+	}
 
-    public double getBalance() { return balance; }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setBalance(double balance) { 
-        this.balance = balance; 
-    }
+	public String getNombre() {
+		return nombre;
+	}
 
-    public Date getUltimoMovimiento() { return ultimoMovimiento; }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public void setUltimoMovimiento(Date ultimoMovimiento) { this.ultimoMovimiento = ultimoMovimiento; }
+	public double getBalance() {
+		return balance;
+	}
 
-    public List<Movimiento> getMovimientos() { return movimientos; }
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
 
-    public void setMovimientos(List<Movimiento> movimientos) { this.movimientos = movimientos; }
-    
-    public String getDescripcion() { return descripcion; }
-    
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    
+	public List<Movimiento> getMovimientos() {
+		return movimientos;
+	}
+
+	public void setMovimientos(List<Movimiento> movimientos) {
+		this.movimientos = movimientos;
+	}
+
 }

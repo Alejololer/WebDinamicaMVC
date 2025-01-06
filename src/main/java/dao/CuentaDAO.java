@@ -13,12 +13,10 @@ public class CuentaDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     Cuenta cuenta = new Cuenta(
-                        rs.getString("nombre"),
-                        rs.getString("descripcion")
+                        rs.getString("nombre")
                     );
                     cuenta.setId(rs.getInt("id"));
                     cuenta.setBalance(rs.getDouble("balance"));
-                    cuenta.setUltimoMovimiento(rs.getDate("ultimo_movimiento"));
                     return cuenta;
                 }
             }

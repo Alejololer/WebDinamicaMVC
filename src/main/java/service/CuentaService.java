@@ -36,9 +36,6 @@ public class CuentaService {
         
         // Actualizar cuenta con saldo real
         cuenta.setBalance(saldoReal);
-        if (!todosLosMovimientos.isEmpty()) {
-            cuenta.setUltimoMovimiento(todosLosMovimientos.get(todosLosMovimientos.size() - 1).getFecha());
-        }
         
         // Obtener movimientos filtrados
         List<Movimiento> movimientosFiltrados = movimientoService.getMovimientosFiltrados(

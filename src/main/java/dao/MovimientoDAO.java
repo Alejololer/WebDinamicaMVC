@@ -42,7 +42,7 @@ public class MovimientoDAO {
 
     private Movimiento crearMovimientoDesdeResultSet(ResultSet rs, int cuentaConsultada) throws SQLException {
         int id = rs.getInt("id");
-        String nombre = rs.getString("nombre");
+        String concepto = rs.getString("concepto");
         Categoria categoria = new Categoria(
             rs.getInt("categoria_id"),
             rs.getString("categoria_nombre")
@@ -51,7 +51,6 @@ public class MovimientoDAO {
         double valor = rs.getDouble("valor");
         String tipoBaseDatos = rs.getString("tipo");
         int cuentaId = rs.getInt("cuenta_id");
-        String descripcion = rs.getString("descripcion");
         double saldoDespues = rs.getDouble("saldo_despues");
         
         // Determinar el tipo de movimiento basado en la cuenta consultada
@@ -72,8 +71,7 @@ public class MovimientoDAO {
             tipo == TipoMovimiento.TRANSFERENCIA_ENTRANTE) {
             
             Cuenta cuentaOrigen = new Cuenta(
-                rs.getString("cuenta_origen_nombre"),
-                ""
+                rs.getString("cuenta_origen_nombre")
             );
             cuentaOrigen.setId(rs.getInt("cuenta_origen_id"));
             
@@ -82,18 +80,17 @@ public class MovimientoDAO {
             
             if (cuentaDestinoId != null) {
                 cuentaDestino = new Cuenta(
-                    rs.getString("cuenta_destino_nombre"),
-                    ""
+                    rs.getString("cuenta_destino_nombre")
                 );
                 cuentaDestino.setId(cuentaDestinoId);
             }
             
-            return new Movimiento(id, nombre, categoria, fecha, valor, tipo, 
-                                cuentaId, cuentaDestinoId, descripcion,
+            return new Movimiento(id, concepto, categoria, fecha, valor, tipo, 
+                                cuentaId, cuentaDestinoId,
                                 cuentaOrigen, cuentaDestino, saldoDespues);
         } else {
-            return new Movimiento(id, nombre, categoria, fecha, valor, tipo,
-                                cuentaId, descripcion, saldoDespues);
+            return new Movimiento(id, concepto, categoria, fecha, valor, tipo,
+                                cuentaId, saldoDespues);
         }
     }
 }
