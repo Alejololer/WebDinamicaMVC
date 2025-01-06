@@ -38,7 +38,7 @@
             <img src="images/wallet-512px.png" alt="wallet" class="pb-md">
             <ul class="menu ls-none">
                 <li>
-                    <button class="menu-button" onclick="location.href='home.jsp'">
+                    <button class="menu-button">
                         <i class="fa-solid fa-house"></i> Inicio
                     </button>
                 </li>
@@ -140,7 +140,6 @@
                                 <th>Tipo</th>
                                 <th class="text-right">Valor</th>
                                 <th class="text-right">Saldo</th>
-                                <th>Detalle</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -185,15 +184,6 @@
                                         class="text-right ${movimiento.saldoDespues >= 0 ? 'text-positive' : 'text-negative'}">
                                         <fmt:formatNumber value="${movimiento.saldoDespues}" type="currency" />
                                     </td>
-                                    <td>
-                                        <c:if test="${movimiento.tipo == 'TRANSFERENCIA_SALIENTE' || 
-                                                     movimiento.tipo == 'TRANSFERENCIA_ENTRANTE'}">
-                                            <button class="link"
-                                                onclick="location.href='verCuenta?id=${movimiento.cuentaRelacionadaId}'">
-                                                Ver cuenta
-                                            </button>
-                                        </c:if>
-                                    </td>
                                 </tr>
                             </c:forEach>
                         </tbody>
@@ -202,7 +192,7 @@
             </section>
 
             <section class="mt-lg">
-                <h3 class="font-primary text-dark pb-md">Resumen del Período</h3>
+                <h3 class="font-primary text-dark pb-md">Resumen</h3>
                 <div class="ds-flex gap-24">
                     <div class="card flex-1">
                         <p class="text-sm text-dark">Total Ingresos</p>

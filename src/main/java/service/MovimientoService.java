@@ -54,20 +54,6 @@ public class MovimientoService {
     
     public List<Movimiento> getAllMovimientos(int cuentaId) throws SQLException {
         List<Movimiento> movimientos = movimientoDAO.getAllMovimientos(cuentaId);
-        return procesarTransferencias(movimientos);
-    }
-    
-    private List<Movimiento> procesarTransferencias(List<Movimiento> movimientos) {
-        movimientos.forEach(mov -> {
-            if (mov.getTipo() == TipoMovimiento.TRANSFERENCIA_SALIENTE || 
-                mov.getTipo() == TipoMovimiento.TRANSFERENCIA_ENTRANTE) {
-                
-                mov.setCuentaRelacionadaId(
-                    mov.getTipo() == TipoMovimiento.TRANSFERENCIA_SALIENTE ? 
-                    mov.getCuentaDestinoId() : mov.getCuentaId()
-                );
-            }
-        });
         return movimientos;
     }
 }

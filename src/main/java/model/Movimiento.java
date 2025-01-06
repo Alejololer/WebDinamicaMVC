@@ -15,7 +15,6 @@ public class Movimiento {
 	private Cuenta cuentaOrigen; 
 	private Cuenta cuentaDestino;
 	private double saldoDespues; 
-	private int cuentaRelacionadaId; 
 
 	// Constructor para movimientos normales
 	public Movimiento(int id, String nombre, Categoria categoria, Date fecha, double valor, TipoMovimiento tipo,
@@ -34,7 +33,7 @@ public class Movimiento {
 		this.saldoDespues = saldoDespues;
 	}
 
-// Constructor para transferencias desde BD
+	// Constructor para transferencias
 	public Movimiento(int id, String nombre, Categoria categoria, Date fecha, double valor, TipoMovimiento tipo,
 			int cuentaId, Integer cuentaDestinoId, String descripcion, Cuenta cuentaOrigen, Cuenta cuentaDestino,
 			double saldoDespues) {
@@ -146,14 +145,5 @@ public class Movimiento {
 
 	public void setSaldoDespues(double saldoDespues) {
 		this.saldoDespues = saldoDespues;
-	}
-
-	public int getCuentaRelacionadaId() {
-        return tipo == TipoMovimiento.TRANSFERENCIA_SALIENTE ? cuentaDestinoId :
-               tipo == TipoMovimiento.TRANSFERENCIA_ENTRANTE ? cuentaId : 0;
-    }
-	
-	public void setCuentaRelacionadaId(int cuentaRelacionadaId) {
-		this.cuentaRelacionadaId = cuentaRelacionadaId;
 	}
 }
