@@ -8,69 +8,6 @@ import java.util.Date;
 
 public class MovimientoDAO {
 
-	public List<Movimiento> getMovimientosFiltrados(int cuentaId, Date fechaInicio, Date fechaFin, String categoria, String tipo)
-	        throws SQLException {
-	    StringBuilder sql = new StringBuilder("SELECT m.*, c.nombre as categoria_nombre, c.id as categoria_id, "
-	            + "cd.nombre as cuenta_destino_nombre, cd.id as cuenta_destino_id, " 
-	            + "co.nombre as cuenta_origen_nombre, co.id as cuenta_origen_id, "
-	            + "(SELECT SUM(CASE "
-	            + "    WHEN tipo = 'INGRESO' OR (tipo = 'TRANSFERENCIA' AND cuenta_destino_id = m.cuenta_id) THEN valor "
-	            + "    ELSE -valor END) "
-	            + "FROM Movimiento m2 "
-	            + "WHERE m2.cuenta_id = m.cuenta_id AND m2.fecha <= m.fecha) as saldo_despues "
-	            + "FROM Movimiento m "
-	            + "JOIN Categoria c ON m.categoria_id = c.id "
-	            + "LEFT JOIN Cuenta cd ON m.cuenta_destino_id = cd.id "
-	            + "LEFT JOIN Cuenta co ON m.cuenta_id = co.id "
-	            + "WHERE m.cuenta_id = ?");
-
-	    List<Object> params = new ArrayList<>();
-	    params.add(cuentaId);
-
-	    if (fechaInicio != null) {
-	        sql.append(" AND m.fecha >= ?");
-	        params.add(fechaInicio);
-	    }
-	    if (fechaFin != null) {
-	        sql.append(" AND m.fecha <= ?");
-	        params.add(fechaFin);
-	    }
-	    if (categoria != null && !categoria.isEmpty()) {
-	        sql.append(" AND m.categoria_id = ?");  
-	        params.add(Integer.parseInt(categoria)); 
-	    }
-	    if (tipo != null && !tipo.isEmpty()) {
-	        if (tipo.equals("TRANSFERENCIA_ENTRANTE")) {
-	            sql.append(" AND m.tipo = 'TRANSFERENCIA' AND m.cuenta_destino_id = ?");
-	            params.add(cuentaId);
-	        } else if (tipo.equals("TRANSFERENCIA_SALIENTE")) {
-	            sql.append(" AND m.tipo = 'TRANSFERENCIA' AND m.cuenta_id = ? AND m.cuenta_destino_id IS NOT NULL");
-	            params.add(cuentaId);
-	        } else {
-	            sql.append(" AND m.tipo = ?");
-	            params.add(tipo);
-	        }
-	    }
-
-	    sql.append(" ORDER BY m.fecha ASC");
-
-	    List<Movimiento> movimientos = new ArrayList<>();
-	    try (Connection conn = DatabaseConnection.getConnection();
-	            PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-
-	        for (int i = 0; i < params.size(); i++) {
-	            stmt.setObject(i + 1, params.get(i));
-	        }
-
-	        try (ResultSet rs = stmt.executeQuery()) {
-	            while (rs.next()) {
-	                movimientos.add(crearMovimientoDesdeResultSet(rs, cuentaId));
-	            }
-	        }
-	    }
-	    return movimientos;
-	}
-
     public List<Movimiento> getAllMovimientos(int cuentaId) throws SQLException {
         String sql = "SELECT m.*, c.nombre as categoria_nombre, c.id as categoria_id, " +
                     "co.id as cuenta_origen_id, co.nombre as cuenta_origen_nombre, " +

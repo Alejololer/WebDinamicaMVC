@@ -31,10 +31,14 @@ public class VerCuentaController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
-            // Usar cuenta demo por defecto
             int cuentaId = request.getParameter("id") != null ? 
                           Integer.parseInt(request.getParameter("id")) : 
                           Constants.DEMO_CUENTA_PRINCIPAL_ID;
+            
+            // Cargar datos básicos
+            Cuenta cuenta = cuentaService.getCuenta(cuentaId);
+            List<Categoria> categorias = categoriaService.getAllCategorias();
+            List<Movimiento> todosLosMovimientos = movimientoService.getAllMovimientos(cuentaId);
             
             // Parámetros de filtrado
             String fechaInicioStr = request.getParameter("fechaInicio");
@@ -42,17 +46,24 @@ public class VerCuentaController extends HttpServlet {
             String categoria = request.getParameter("categoria");
             String tipo = request.getParameter("tipo");
             
-            // Cargar datos de la cuenta
-            Cuenta cuenta = cuentaService.getCuenta(cuentaId);
-            List<Categoria> categorias = categoriaService.getAllCategorias();
+            // Calcular saldo real con todos los movimientos
+            double saldoReal = todosLosMovimientos.stream()
+                .mapToDouble(m -> {
+                    if (m.getTipo() == TipoMovimiento.INGRESO || 
+                        m.getTipo() == TipoMovimiento.TRANSFERENCIA_ENTRANTE) {
+                        return m.getValor();
+                    } else {
+                        return -m.getValor();
+                    }
+                })
+                .sum();
             
-            List<Movimiento> movimientos;
+            // Actualizar el balance real de la cuenta
+            cuenta.setBalance(saldoReal);
             
-            // Si no hay filtros, cargar todos los movimientos
-            if (fechaInicioStr == null && fechaFinStr == null && categoria == null && tipo == null) {
-                movimientos = movimientoService.getAllMovimientos(cuentaId);
-            } else {
-                // Si hay filtros, aplicarlos
+            // Aplicar filtros si existen
+            List<Movimiento> movimientosFiltrados = todosLosMovimientos;
+            if (fechaInicioStr != null || fechaFinStr != null || categoria != null || tipo != null) {
                 Date fechaInicio = null;
                 Date fechaFin = null;
                 
@@ -63,14 +74,15 @@ public class VerCuentaController extends HttpServlet {
                     fechaFin = new SimpleDateFormat("yyyy-MM-dd").parse(fechaFinStr);
                 }
                 
-                movimientos = movimientoService.getMovimientosFiltrados(cuentaId, fechaInicio, fechaFin, categoria, tipo);
+                movimientosFiltrados = movimientoService.getMovimientosFiltrados(
+                    todosLosMovimientos, fechaInicio, fechaFin, categoria, tipo);
             }
             
-            // Calcular totales
+            // Calcular totales solo de los movimientos filtrados
             double totalIngresos = 0;
             double totalEgresos = 0;
             
-            for (Movimiento m : movimientos) {
+            for (Movimiento m : movimientosFiltrados) {
                 if (m.getTipo() == TipoMovimiento.INGRESO || 
                     m.getTipo() == TipoMovimiento.TRANSFERENCIA_ENTRANTE) {
                     totalIngresos += m.getValor();
@@ -79,15 +91,17 @@ public class VerCuentaController extends HttpServlet {
                     totalEgresos += Math.abs(m.getValor());
                 }
             }
-                        
-            // Establecer atributos para la request
+            
+            // Actualizar los movimientos filtrados en la cuenta
+            cuenta.setMovimientos(movimientosFiltrados);
+            
+            // Establecer atributos para la vista
             request.setAttribute("cuenta", cuenta);
-            request.setAttribute("movimientos", movimientos);
+            request.setAttribute("movimientos", movimientosFiltrados);
             request.setAttribute("categorias", categorias);
             request.setAttribute("totalIngresos", totalIngresos);
             request.setAttribute("totalEgresos", totalEgresos);
             
-            // Redirigir a la vista
             request.getRequestDispatcher("index.jsp").forward(request, response);
             
         } catch (SQLException | ParseException e) {

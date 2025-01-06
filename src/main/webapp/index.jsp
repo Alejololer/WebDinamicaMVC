@@ -66,8 +66,8 @@
                     <div class="ds-flex gap-24">
                         <div>
                             <p class="text-sm">Balance Actual</p>
-                            <p class="text-xl font-bold ${cuenta.CalcularBalanceReal >= 0 ? 'text-positive' : 'text-negative'}">
-                                <fmt:formatNumber value="${cuenta.CalcularBalanceReal}" type="currency" />
+                            <p class="text-xl font-bold ${cuenta.balance >= 0 ? 'text-positive' : 'text-negative'}">
+                                <fmt:formatNumber value="${cuenta.balance}" type="currency" />
                             </p>
                         </div>
                         <div>
@@ -177,10 +177,12 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td class="text-right ${movimiento.tipo == 'EGRESO' || movimiento.tipo == 'TRANSFERENCIA_SALIENTE' ? 'text-negative' : 'text-positive'}">
+                                    <td
+                                        class="text-right ${movimiento.tipo == 'EGRESO' || movimiento.tipo == 'TRANSFERENCIA_SALIENTE' ? 'text-negative' : 'text-positive'}">
                                         <fmt:formatNumber value="${movimiento.valor}" type="currency" />
                                     </td>
-                                    <td class="text-right ${movimiento.saldoDespues >= 0 ? 'text-positive' : 'text-negative'}">
+                                    <td
+                                        class="text-right ${movimiento.saldoDespues >= 0 ? 'text-positive' : 'text-negative'}">
                                         <fmt:formatNumber value="${movimiento.saldoDespues}" type="currency" />
                                     </td>
                                     <td>
