@@ -10,7 +10,6 @@ public class Cuenta {
     private double balance;
     private Date ultimoMovimiento;
     private List<Movimiento> movimientos;
-    private Usuario usuario;
     
     public Cuenta(String nombre, String descripcion, double balance) {
         this.nombre = nombre;
@@ -44,10 +43,6 @@ public class Cuenta {
     public List<Movimiento> getMovimientos() { return movimientos; }
 
     public void setMovimientos(List<Movimiento> movimientos) { this.movimientos = movimientos; }
-	
-    public Usuario getUsuario() { return usuario; }
-	
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
     
     public String getDescripcion() { return descripcion; }
     
