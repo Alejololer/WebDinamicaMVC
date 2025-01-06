@@ -1,6 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    // Verificar si es la primera vez que se abre la sesión
+    if (session.getAttribute("initialized") == null) {
+        // Marcar como inicializado
+        session.setAttribute("initialized", true);
+        // Redirigir al servlet
+        response.sendRedirect(request.getContextPath() + "/verCuenta");
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,23 +57,23 @@
                 <div class="ds-flex gap-16 font-primary text-dark">
                     <div>
                         <p class="text-lg font-bold">
-                            <c:out value="${account.nombre}" />
+                            <c:out value="${cuenta.nombre}" />
                         </p>
                         <p class="text-base">
-                            <c:out value="${account.descripcion}" />
+                            <c:out value="${cuenta.descripcion}" />
                         </p>
                     </div>
                     <div class="ds-flex gap-24">
                         <div>
                             <p class="text-sm">Balance Actual</p>
-                            <p class="text-xl font-bold ${account.balance >= 0 ? 'text-positive' : 'text-negative'}">
-                                <fmt:formatNumber value="${account.balance}" type="currency" />
+                            <p class="text-xl font-bold ${cuenta.CalcularBalanceReal >= 0 ? 'text-positive' : 'text-negative'}">
+                                <fmt:formatNumber value="${cuenta.CalcularBalanceReal}" type="currency" />
                             </p>
                         </div>
                         <div>
                             <p class="text-sm">Último Movimiento</p>
                             <p class="text-base">
-                                <fmt:formatDate value="${account.ultimoMovimiento}" pattern="dd/MM/yyyy" />
+                                <fmt:formatDate value="${cuenta.ultimoMovimiento}" pattern="dd/MM/yyyy" />
                             </p>
                         </div>
                     </div>
@@ -74,7 +83,7 @@
             <section class="movimientos-filter mt-lg">
                 <h3 class="font-primary text-dark pb-md">Filtrar Movimientos</h3>
                 <form id="filter-form" action="verCuenta" method="GET" class="ds-flex gap-16 flex-wrap">
-                    <input type="hidden" name="id" value="${account.id}">
+                    <input type="hidden" name="id" value="${cuenta.id}">
 
                     <div class="form-group">
                         <label for="tipo" class="font-primary text-dark">Tipo</label>

@@ -10,12 +10,12 @@ public class Movimiento {
 	private double valor;
 	private TipoMovimiento tipo;
 	private int cuentaId;
-	private Integer cuentaDestinoId; // Solo para transferencias
+	private Integer cuentaDestinoId; 
 	private String descripcion;
-	private Cuenta cuentaOrigen; // Para transferencias
-	private Cuenta cuentaDestino; // Para transferencias
-	private double saldoDespues; // Para mostrar el saldo después del movimiento
-	private int cuentaRelacionadaId; // Para el enlace "Ver cuenta"
+	private Cuenta cuentaOrigen; 
+	private Cuenta cuentaDestino;
+	private double saldoDespues; 
+	private int cuentaRelacionadaId; 
 
 	// Constructor para movimientos normales
 	public Movimiento(int id, String nombre, Categoria categoria, Date fecha, double valor, TipoMovimiento tipo,

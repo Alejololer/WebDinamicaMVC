@@ -10,13 +10,13 @@ CREATE TABLE Usuario (
     password VARCHAR(100)
 ) ENGINE=InnoDB;
 
--- Tabla Categoria (simplificada)
+-- Tabla Categoria 
 CREATE TABLE Categoria (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(50)
 ) ENGINE=InnoDB;
 
--- Tabla Cuenta (simplificada)
+-- Tabla Cuenta 
 CREATE TABLE Cuenta (
     id INT PRIMARY KEY AUTO_INCREMENT,
     usuario_id INT,
@@ -27,7 +27,7 @@ CREATE TABLE Cuenta (
     FOREIGN KEY (usuario_id) REFERENCES Usuario(id)
 ) ENGINE=InnoDB;
 
--- Tabla Movimiento (simplificada)
+-- Tabla Movimiento 
 CREATE TABLE Movimiento (
     id INT PRIMARY KEY AUTO_INCREMENT,
     cuenta_id INT,
@@ -43,7 +43,7 @@ CREATE TABLE Movimiento (
     FOREIGN KEY (cuenta_destino_id) REFERENCES Cuenta(id)
 ) ENGINE=InnoDB;
 
--- Insertar categorías base (simplificadas)
+-- Insertar categorías base 
 INSERT INTO Categoria (nombre) VALUES
     ('Salario'),
     ('Alimentación'),

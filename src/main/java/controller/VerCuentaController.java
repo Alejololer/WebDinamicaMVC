@@ -31,7 +31,7 @@ public class VerCuentaController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
-            // Usar cuenta demo por defecto si no se especifica una
+            // Usar cuenta demo por defecto
             int cuentaId = request.getParameter("id") != null ? 
                           Integer.parseInt(request.getParameter("id")) : 
                           Constants.DEMO_CUENTA_PRINCIPAL_ID;
@@ -42,7 +42,7 @@ public class VerCuentaController extends HttpServlet {
             String categoria = request.getParameter("categoria");
             String tipo = request.getParameter("tipo");
             
-            // Cargar datos
+            // Cargar datos de la cuenta
             Cuenta cuenta = cuentaService.getCuenta(cuentaId);
             List<Categoria> categorias = categoriaService.getAllCategorias();
             
@@ -79,10 +79,10 @@ public class VerCuentaController extends HttpServlet {
                     totalEgresos += Math.abs(m.getValor());
                 }
             }
-            
-            // Establecer atributos
-            request.setAttribute("account", cuenta);
-            request.setAttribute("movements", movimientos);
+                        
+            // Establecer atributos para la request
+            request.setAttribute("cuenta", cuenta);
+            request.setAttribute("movimientos", movimientos);
             request.setAttribute("categorias", categorias);
             request.setAttribute("totalIngresos", totalIngresos);
             request.setAttribute("totalEgresos", totalEgresos);

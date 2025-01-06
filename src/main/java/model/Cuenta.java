@@ -12,21 +12,14 @@ public class Cuenta {
     private List<Movimiento> movimientos;
     private Usuario usuario;
     
-    // Constructor completo
     public Cuenta(String nombre, String descripcion, double balance) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.balance = balance;
     }
     
-    // Constructor básico
     public Cuenta(String nombre, String descripcion) {
         this(nombre, descripcion, 0.0);
-    }
-    
-    // Constructor mínimo para referencias
-    public Cuenta() {
-        this("", "", 0.0);
     }
     
     // Getters y Setters básicos
@@ -56,35 +49,4 @@ public class Cuenta {
     
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    
-    /**
-     * Calcula el balance actual sumando todos los movimientos.
-     * Útil para verificar que el balance almacenado sea correcto.
-     */
-    public double calcularBalanceReal() {
-        if (movimientos == null || movimientos.isEmpty()) {
-            return 0.0;
-        }
-        return movimientos.stream()
-                .mapToDouble(m -> {
-                    switch (m.getTipo()) {
-                        case INGRESO:
-                        case TRANSFERENCIA_ENTRANTE:
-                            return m.getValor();
-                        case EGRESO:
-                        case TRANSFERENCIA_SALIENTE:
-                            return -m.getValor();
-                        default:
-                            return 0.0;
-                    }
-                })
-                .sum();
-    }
-    
-    /**
-     * Verifica que el balance almacenado coincida con el calculado
-     */
-    public boolean verificarBalance() {
-        return Math.abs(this.balance - calcularBalanceReal()) < 0.01;
-    }
 }

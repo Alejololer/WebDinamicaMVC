@@ -36,8 +36,8 @@ public class MovimientoDAO {
 	        params.add(fechaFin);
 	    }
 	    if (categoria != null && !categoria.isEmpty()) {
-	        sql.append(" AND m.categoria_id = ?");  // Cambiado a categoria_id
-	        params.add(Integer.parseInt(categoria)); // Convertir String a Integer
+	        sql.append(" AND m.categoria_id = ?");  
+	        params.add(Integer.parseInt(categoria)); 
 	    }
 	    if (tipo != null && !tipo.isEmpty()) {
 	        if (tipo.equals("TRANSFERENCIA_ENTRANTE")) {
@@ -84,7 +84,7 @@ public class MovimientoDAO {
                     "LEFT JOIN Categoria c ON m.categoria_id = c.id " +
                     "LEFT JOIN Cuenta co ON m.cuenta_id = co.id " +
                     "LEFT JOIN Cuenta cd ON m.cuenta_destino_id = cd.id " +
-                    "WHERE m.cuenta_id = ? OR m.cuenta_destino_id = ? " +
+                    "WHERE m.cuenta_id = ? " +
                     "ORDER BY m.fecha ASC";
 
         List<Movimiento> movimientos = new ArrayList<>();
@@ -93,7 +93,6 @@ public class MovimientoDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, cuentaId);
-            stmt.setInt(2, cuentaId);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
