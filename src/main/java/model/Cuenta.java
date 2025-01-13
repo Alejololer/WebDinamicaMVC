@@ -1,17 +1,30 @@
 package model;
 
+import jakarta.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "Cuenta")
 public class Cuenta {
-	private int id;
-	private String nombre;
-	private double balance;
-	private List<Movimiento> movimientos;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    
+    @Column(name = "nombre")
+    private String nombre;
+    
+    @Column(name = "balance")
+    private double balance;
+    
+    @OneToMany(mappedBy = "cuentaOrigen", fetch = FetchType.LAZY)
+    private List<Movimiento> movimientos;
 
-	public Cuenta(String nombre, double balance) {
-		this.nombre = nombre;
-		this.balance = balance;
-	}
+    public Cuenta() {}
+
+    public Cuenta(String nombre, double balance) {
+        this.nombre = nombre;
+        this.balance = balance;
+    }
 
 	public Cuenta(String nombre) {
 		this(nombre, 0.0);

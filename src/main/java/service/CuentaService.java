@@ -3,12 +3,7 @@ package service;
 import dao.CuentaDAO;
 import dto.CuentaRequestDTO;
 import dto.CuentaResponseDTO;
-import model.Categoria;
-import model.Cuenta;
-import model.Movimiento;
-import model.MovimientosResumen;
-import model.TipoMovimiento;
-
+import model.*;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -25,38 +20,47 @@ public class CuentaService {
     
     public CuentaResponseDTO obtenerCuentaConMovimientos(CuentaRequestDTO requestDTO) 
             throws SQLException {
-        // Obtener datos básicos
-        Cuenta cuenta = getCuenta(requestDTO.getCuentaId());
-        List<Categoria> categorias = categoriaService.getAllCategorias();
-        List<Movimiento> todosLosMovimientos = 
-            movimientoService.getAllMovimientos(requestDTO.getCuentaId());
-        
-        // Calcular saldo real
-        double saldoReal = calcularSaldoReal(todosLosMovimientos);
-        
-        // Actualizar cuenta con saldo real
-        cuenta.setBalance(saldoReal);
-        
-        // Obtener movimientos filtrados
-        List<Movimiento> movimientosFiltrados = movimientoService.getMovimientosFiltrados(
-            todosLosMovimientos,
-            requestDTO.getFechaInicio(),
-            requestDTO.getFechaFin(),
-            requestDTO.getCategoria(),
-            requestDTO.getTipo()
-        );
-        
-        // Calcular totales
-        MovimientosResumen resumen = calcularTotales(movimientosFiltrados);
-        
-        return new CuentaResponseDTO(
-            cuenta,
-            movimientosFiltrados,
-            resumen.getTotalIngresos(),
-            resumen.getTotalEgresos(),
-            saldoReal,
-            categorias
-        );
+        try {
+            // Obtener datos básicos
+            Cuenta cuenta = getCuenta(requestDTO.getCuentaId());
+            if (cuenta == null) {
+                throw new SQLException("No se pudo encontrar la cuenta " + requestDTO.getCuentaId());
+            }
+            
+            List<Categoria> categorias = categoriaService.getAllCategorias();
+            List<Movimiento> todosLosMovimientos = 
+                movimientoService.getAllMovimientos(requestDTO.getCuentaId());
+            
+            // Calcular saldo real
+            double saldoReal = calcularSaldoReal(todosLosMovimientos);
+            
+            // Actualizar cuenta con saldo real
+            cuenta.setBalance(saldoReal);
+            
+            // Obtener movimientos filtrados
+            List<Movimiento> movimientosFiltrados = movimientoService.getMovimientosFiltrados(
+                todosLosMovimientos,
+                requestDTO.getFechaInicio(),
+                requestDTO.getFechaFin(),
+                requestDTO.getCategoria(),
+                requestDTO.getTipo()
+            );
+            
+            // Calcular totales
+            MovimientosResumen resumen = calcularTotales(movimientosFiltrados);
+            
+            return new CuentaResponseDTO(
+                cuenta,
+                movimientosFiltrados,
+                resumen.getTotalIngresos(),
+                resumen.getTotalEgresos(),
+                saldoReal,
+                categorias
+            );
+            
+        } catch (Exception e) {
+            throw new SQLException("Error processing account data", e);
+        }
     }
     
     private double calcularSaldoReal(List<Movimiento> movimientos) {

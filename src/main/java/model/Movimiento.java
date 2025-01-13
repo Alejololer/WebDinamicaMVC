@@ -1,19 +1,51 @@
 package model;
 
+import jakarta.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "Movimiento")
 public class Movimiento {
-	private int id;
-	private String concepto;
-	private Categoria categoria;
-	private Date fecha;
-	private double valor;
-	private TipoMovimiento tipo;
-	private int cuentaId;
-	private Integer cuentaDestinoId; 
-	private Cuenta cuentaOrigen; 
-	private Cuenta cuentaDestino;
-	private double saldoDespues; 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    
+    @Column(name = "concepto")
+    private String concepto;
+    
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+    
+    @Column(name = "fecha")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fecha;
+    
+    @Column(name = "valor")
+    private double valor;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo")
+    private TipoMovimiento tipo;
+    
+    @Column(name = "cuenta_id")
+    private int cuentaId;
+    
+    @Column(name = "cuenta_destino_id")
+    private Integer cuentaDestinoId;
+    
+    @ManyToOne
+    @JoinColumn(name = "cuenta_id", insertable = false, updatable = false)
+    private Cuenta cuentaOrigen;
+    
+    @ManyToOne
+    @JoinColumn(name = "cuenta_destino_id", insertable = false, updatable = false)
+    private Cuenta cuentaDestino;
+    
+    @Transient // This field is calculated
+    private double saldoDespues;
+
+	public Movimiento() {}
 
 	// Constructor para movimientos normales
 	public Movimiento(int id, String nombre, Categoria categoria, Date fecha, double valor, TipoMovimiento tipo,
